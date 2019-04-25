@@ -2250,10 +2250,8 @@ void unit_prune_cgroup(Unit *u) {
         is_root_slice = unit_has_name(u, SPECIAL_ROOT_SLICE);
 
         r = cg_trim_everywhere(u->manager->cgroup_supported, u->cgroup_path, !is_root_slice);
-        if (r < 0) {
-                log_unit_debug_errno(u, r, "Failed to destroy cgroup %s, ignoring: %m", u->cgroup_path);
-                return;
-        }
+        if (r < 0)
+                log_unit_warning_errno(u, r, "Failed to destroy cgroup %s, ignoring: %m", u->cgroup_path);
 
         if (is_root_slice)
                 return;
